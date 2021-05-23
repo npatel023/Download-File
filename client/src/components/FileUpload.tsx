@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from 'react'
+import { SyntheticEvent, useState, Dispatch, SetStateAction } from 'react'
 
 import {
     Box,
@@ -15,7 +15,15 @@ import AcceptedFileTypesModal from './AcceptedFileTypesModal'
 import { validateFileSize, validateFileType } from '../service/fileValidatorService'
 import FileService from '../service/fileService'
 
-function FileUpload() {
+interface Props {
+    setFileId: Dispatch<SetStateAction<number>>
+}
+
+function FileUpload(props: Props) {
+    const {
+        setFileId
+    } = props
+
     const [isFileTypesModalOpen, setIsFilesTypeModalOpen] = useState<boolean>(false)
     const [uploadFormError, setUploadFormError] = useState<string>('')
     const [fileUploadPercentage, setFileUploadPercentage] = useState<number | undefined>(undefined)
@@ -82,6 +90,8 @@ function FileUpload() {
                             duration: 3000,
                             isClosable: true
                         })
+
+                        setFileId(response.fileId ?? 0)
                         return Promise.resolve(response)
                     }
                 })
@@ -97,8 +107,6 @@ function FileUpload() {
 
     return (
         <Box
-            width="50%"
-            m="100px auto"
             padding="2"
             shadow="base"
         >
